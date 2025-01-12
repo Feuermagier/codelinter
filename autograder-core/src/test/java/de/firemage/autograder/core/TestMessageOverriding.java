@@ -1,6 +1,7 @@
 package de.firemage.autograder.core;
 
 import de.firemage.autograder.api.AbstractLinter;
+import de.firemage.autograder.api.FluentBuilder;
 import fluent.syntax.parser.FTLParser;
 import fluent.syntax.parser.FTLStream;
 import org.junit.jupiter.api.Test;
@@ -57,7 +58,7 @@ public class TestMessageOverriding {
     @Test
     void testConditionalMessageOverride() {
         var builder = AbstractLinter.builder(Locale.ENGLISH)
-                .conditionalOverride(ProblemType.AVOID_LABELS, "avoid-labels", "Foo Bar");
+                .conditionalOverride(ProblemType.AVOID_LABELS, FluentBuilder.ofSingle("avoid-labels", "Foo Bar"));
         var linter = new Linter(builder);
         String msg = linter.translateMessage(new LocalizedMessageForProblem(new LocalizedMessage("avoid-labels"), ProblemType.AVOID_LABELS));
         assertEquals("Foo Bar", msg);
@@ -66,8 +67,8 @@ public class TestMessageOverriding {
     @Test
     void testMultipleConditionalMessageOverrides() {
         var builder = AbstractLinter.builder(Locale.ENGLISH)
-                .conditionalOverride(ProblemType.AVOID_SHADOWING, "avoid-shadowing", "1234")
-                .conditionalOverride(ProblemType.AVOID_LABELS, "avoid-labels", "Foo Bar");
+                .conditionalOverride(ProblemType.AVOID_SHADOWING, FluentBuilder.ofSingle("avoid-shadowing", "1234"))
+                .conditionalOverride(ProblemType.AVOID_LABELS, FluentBuilder.ofSingle("avoid-labels", "Foo Bar"));
         var linter = new Linter(builder);
 
         String msg = linter.translateMessage(new LocalizedMessageForProblem(new LocalizedMessage("avoid-labels"), ProblemType.AVOID_LABELS));
@@ -80,8 +81,8 @@ public class TestMessageOverriding {
     @Test
     void testMultipleConditionalMessageOverridesForSameProblemType() {
         var builder = AbstractLinter.builder(Locale.ENGLISH)
-                .conditionalOverride(ProblemType.AVOID_SHADOWING, "avoid-shadowing", "1234")
-                .conditionalOverride(ProblemType.AVOID_SHADOWING, "avoid-labels", "Foo Bar");
+                .conditionalOverride(ProblemType.AVOID_SHADOWING, FluentBuilder.ofSingle("avoid-shadowing", "1234"))
+                .conditionalOverride(ProblemType.AVOID_SHADOWING, FluentBuilder.ofSingle("avoid-labels", "Foo Bar"));
         var linter = new Linter(builder);
 
         String msg = linter.translateMessage(new LocalizedMessageForProblem(new LocalizedMessage("avoid-labels"), ProblemType.AVOID_SHADOWING));
@@ -94,7 +95,7 @@ public class TestMessageOverriding {
     @Test
     void testConditionalMessageOverrideForSameProblemType() {
         var builder = AbstractLinter.builder(Locale.ENGLISH)
-                .conditionalOverride(ProblemType.AVOID_SHADOWING, "avoid-shadowing", "1234");
+                .conditionalOverride(ProblemType.AVOID_SHADOWING, FluentBuilder.ofSingle("avoid-shadowing", "1234"));
         var linter = new Linter(builder);
 
         String msg = linter.translateMessage(new LocalizedMessageForProblem(new LocalizedMessage("avoid-labels"), ProblemType.AVOID_SHADOWING));

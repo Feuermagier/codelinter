@@ -26,7 +26,7 @@ public interface AbstractLinter {
         private ClassLoader classLoader;
         private int maxProblemsPerCheck = -1;
         private List<FluentResource> messageOverrides = new ArrayList<>();
-        private Map<AbstractProblemType, List<String>> conditionalOverrides = new HashMap<>();
+        private Map<AbstractProblemType, List<FluentResource>> conditionalOverrides = new HashMap<>();
 
         private Builder(Locale locale) {
             this.locale = locale;
@@ -88,18 +88,25 @@ public interface AbstractLinter {
 
         /**
          * Add a message override that only applies if the message was emitted for the specified problem type.
-         * Conditional overrides override all other overrides. The (problemType, key) pair must be unique.
+         * Conditional overrides override all other overrides.
          * @param problemType
-         * @param key
-         * @param value
+         * @param bundle
          * @return this
          */
-        public Builder conditionalOverride(AbstractProblemType problemType, String key, String value) {
-            this.conditionalOverrides.computeIfAbsent(problemType, k -> new ArrayList<>()).add(key + " = " + value);
+        public Builder conditionalOverride(AbstractProblemType problemType, FluentResource bundle) {
+            this.conditionalOverrides.computeIfAbsent(problemType, k -> new ArrayList<>()).add(bundle);
             return this;
         }
 
-        public Map<AbstractProblemType, List<String>> getConditionalOverrides() {
+        /**
+         * @see #conditionalOverride(AbstractProblemType, FluentResource)
+         */
+        public Builder conditionalOverride(Map<AbstractProblemType, FluentResource> bundles) {
+            bundles.forEach(this::conditionalOverride);
+            return this;
+        }
+
+        public Map<AbstractProblemType, List<FluentResource>> getConditionalOverrides() {
             return this.conditionalOverrides;
         }
     }

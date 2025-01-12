@@ -19,7 +19,7 @@ public class Translations implements AbstractTranslations {
     private final FluentBundle mainTranslations;
     private final Map<AbstractProblemType, FluentBundle> conditionalTranslations;
 
-    public Translations(Locale locale, List<FluentResource> mainOverrides, Map<AbstractProblemType, List<String>> conditionalOverrides) {
+    public Translations(Locale locale, List<FluentResource> mainOverrides, Map<AbstractProblemType, List<FluentResource>> conditionalOverrides) {
         String filename = switch (locale.getLanguage()) {
             case "de" -> "/strings.de.ftl";
             case "en" -> "/strings.en.ftl";
@@ -51,8 +51,9 @@ public class Translations implements AbstractTranslations {
             this.conditionalTranslations = new HashMap<>();
             for (var entry : conditionalOverrides.entrySet()) {
                 var conditionalBuilder = FluentBundle.builder(locale, ICUFunctionFactory.INSTANCE);
-                var content = String.join("\n", entry.getValue());
-                conditionalBuilder.addResource(FTLParser.parse(FTLStream.of(content)));
+                for (var resource : entry.getValue()) {
+                    conditionalBuilder.addResourceOverriding(resource);
+                }
                 this.conditionalTranslations.put(entry.getKey(), conditionalBuilder.build());
             }
         } catch (IOException e) {
