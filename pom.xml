@@ -57,7 +57,7 @@
         <spoon.version>11.1.1-beta-21</spoon.version>
         <fluent.version>0.70</fluent.version>
         <reflections.version>0.10.2</reflections.version>
-        <javaparser.version>3.26.1</javaparser.version>
+        <javaparser.version>3.26.3</javaparser.version>
 
         <revision>0.5.13</revision>
     </properties>
